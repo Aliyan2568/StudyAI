@@ -1,0 +1,1031 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyAI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 22px 8%;
+            border-bottom: 1px solid #293449;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: #818cf8;
+            font-size: 26px;
+        }
+
+        header span {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            margin-bottom: 35px;
+        }
+
+        .intro h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .upload-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .upload-box h3 {
+            margin-bottom: 18px;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        button {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #6366f1;
+            color: white;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #4f46e5;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #file-status {
+            margin-top: 15px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .study-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .study-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tool-button {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 20px;
+            text-align: left;
+            border-radius: 10px;
+        }
+
+        .tool-button:hover {
+            border-color: #818cf8;
+            background: #263449;
+        }
+
+        .tool-button strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .tool-button small {
+            color: #94a3b8;
+            font-weight: normal;
+        }
+
+        .result-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            min-height: 150px;
+            margin-bottom: 40px;
+        }
+
+        .result-box h3 {
+            margin-bottom: 18px;
+            color: #a5b4fc;
+        }
+
+        #result {
+            color: #cbd5e1;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .message {
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+        
+        .flashcard {
+            background: #263449;
+            border: 1px solid #475569;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+            min-height: 180px;
+        }
+        .flashcard-progress {
+            width: 100%;
+            height: 8px;
+            background: #334155;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .flashcard-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #818cf8;
+            transition: width 0.3s;
+        }
+
+        .flashcard-stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .know-button {
+            background: #15803d;
+        }
+
+        .know-button:hover {
+            background: #166534;
+        }
+
+        .learning-button {
+            background: #b45309;
+        }
+
+        .learning-button:hover {
+            background: #92400e;
+        }
+
+        .flashcard h2 {
+            margin: 20px 0;
+        }
+
+        .study-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .answer-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 10px 0;
+            background: #263449;
+            border: 1px solid #475569;
+        }
+
+        .answer-option:hover {
+            border-color: #818cf8;
+        }
+
+        .answer-option:disabled {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .correct {
+            border-color: #22c55e;
+            background: #14532d;
+        }
+
+        .incorrect {
+            border-color: #ef4444;
+            background: #7f1d1d;
+        }
+
+        #feedback {
+            margin-top: 18px;
+            line-height: 1.6;
+        }
+
+        #interactive {
+            margin-top: 20px;
+        }
+
+
+        @media (max-width: 650px) {
+            .tools {
+                grid-template-columns: 1fr;
+            }
+
+            .intro h2 {
+                font-size: 25px;
+            }
+        }
+                .markdown-content {
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
+            color: #a5b4fc;
+            margin: 25px 0 12px;
+        }
+
+        .markdown-content h2 {
+            font-size: 23px;
+        }
+
+        .markdown-content h3 {
+            font-size: 18px;
+        }
+
+        .markdown-content p {
+            margin-bottom: 15px;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            padding-left: 25px;
+            margin-bottom: 18px;
+        }
+
+        .markdown-content li {
+            margin-bottom: 8px;
+        }
+
+        .markdown-content strong {
+            color: #ffffff;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            display: block;
+            overflow-x: auto;
+        }
+
+        .markdown-content th,
+        .markdown-content td {
+            padding: 12px;
+            border: 1px solid #475569;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: #334155;
+            color: #a5b4fc;
+        }
+
+        .markdown-content tr:nth-child(even) {
+            background: #263449;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>StudyAI</h1>
+        <span>AI Powered Study Assistant</span>
+    </header>
+
+    <main>
+
+        <section class="intro">
+            <h2>Study smarter, not harder.</h2>
+            <p>
+                Upload your lecture slides and let AI create
+                summaries, flashcards, and quizzes to help
+                you prepare for exams.
+            </p>
+        </section>
+
+        <section class="upload-box">
+            <h3>Upload Lecture PDF or PowerPoint</h3>
+
+            <input type="file" id="pdf-file" accept=".pdf,.pptx">
+
+            <button id="upload-btn" onclick="uploadPDF()">
+                Upload File
+            </button>
+
+            <p id="file-status">No lecture uploaded yet.</p>
+        </section>
+
+        <section class="study-section" id="study-section">
+
+            <h3>Choose a Study Tool</h3>
+
+            <div class="tools">
+
+                <button class="tool-button" onclick="generate('summary')">
+                    <strong>Generate Summary</strong>
+                    <small>Review the important lecture concepts.</small>
+                </button>
+
+                <button class="tool-button" onclick="generate('flashcards')">
+                    <strong>Generate Flashcards</strong>
+                    <small>Practice questions and answers.</small>
+                </button>
+
+                <button class="tool-button" onclick="generate('quiz')">
+                    <strong>Generate Quiz</strong>
+                    <small>Test your understanding.</small>
+                </button>
+
+            </div>
+
+            <div class="result-box">
+                <h3 id="result-title">Study Materials</h3>
+                <p class="message" id="result-message">
+                    Choose a study tool to get started.
+                </p>
+                <div id="result"></div>
+
+                <button
+                    id="download-summary-btn"
+                    onclick="downloadSummary()"
+                    style="display: none; margin-top: 20px;"
+                >
+                    Download Summary PDF
+                </button>
+
+                <button
+                    id="download-flashcards-btn"
+                    onclick="downloadFlashcards()"
+                    style="display: none; margin-top: 20px;"
+                >
+                    Download Flashcards Excel
+                </button>
+
+                <button
+                    id="download-quiz-btn"
+                    onclick="downloadQuiz()"
+                    style="display: none; margin-top: 20px;"
+                >
+                    Download Quiz Excel
+                </button>
+
+                <div id="interactive"></div>
+            </div>
+
+        </section>
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <script>
+        let lectureText = "";
+        let generatedSummary = "";
+
+        async function uploadPDF() {
+            const fileInput = document.getElementById("pdf-file");
+            const status = document.getElementById("file-status");
+            const uploadButton = document.getElementById("upload-btn");
+
+            if (!fileInput.files.length) {
+                status.textContent = "Please select a PDF or PowerPoint file first.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            uploadButton.disabled = true;
+            status.textContent = "Uploading and extracting text...";
+
+            try {
+                const response = await fetch("/upload-pdf", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || "Upload failed.");
+                }
+
+                lectureText = data.extracted_text;
+
+                generatedSummary = "";
+                flashcards = [];
+                flashcardStatus = [];
+                quizQuestions = [];
+
+                document.getElementById("download-summary-btn").style.display = "none";
+                document.getElementById("download-flashcards-btn").style.display = "none";
+                document.getElementById("download-quiz-btn").style.display = "none";
+
+                document.getElementById("interactive").innerHTML = "";
+
+                status.textContent =
+                    data.filename + " uploaded successfully! " +
+                    data.pages + " pages/slides processed.";
+
+                document.getElementById("study-section").style.display = "block";
+
+                document.getElementById("result-title").textContent =
+                    "Study Materials";
+
+                document.getElementById("result-message").textContent =
+                    "Choose a study tool to get started.";
+
+                document.getElementById("result").textContent = "";
+
+            } catch (error) {
+                status.textContent = error.message;
+            } finally {
+                uploadButton.disabled = false;
+            }
+        }
+                
+        let flashcards = [];
+        let flashcardIndex = 0;
+        let cardFlipped = false;
+        let flashcardStatus = [];
+
+        let quizQuestions = [];
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizAnswered = false;
+
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[character]);
+        }
+        
+        function shuffleQuizAnswers(question) {
+            const choices = Object.entries(question.choices).map(([letter, answer]) => ({
+                answer: answer,
+                isCorrect: letter === question.correct_answer
+            }));
+
+            for (let i = choices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [choices[i], choices[j]] = [choices[j], choices[i]];
+            }
+
+            const letters = ["A", "B", "C", "D"];
+            const shuffledChoices = {};
+            let correctAnswer = "";
+
+            choices.forEach((choice, index) => {
+                shuffledChoices[letters[index]] = choice.answer;
+
+                if (choice.isCorrect) {
+                    correctAnswer = letters[index];
+                }
+            });
+
+            return {
+                ...question,
+                choices: shuffledChoices,
+                correct_answer: correctAnswer
+            };
+        }
+
+
+        async function generate(type) {
+            const result = document.getElementById("result");
+            const title = document.getElementById("result-title");
+            const message = document.getElementById("result-message");
+            const interactive = document.getElementById("interactive");
+
+            if (!lectureText) {
+                message.textContent = "Please upload a lecture PDF first.";
+                return;
+            }
+
+            const endpoints = {
+                summary: "/generate-summary",
+                flashcards: "/generate-flashcards",
+                quiz: "/generate-quiz"
+            };
+
+            const fields = {
+                summary: "summary"
+            };
+
+            title.textContent =
+                type.charAt(0).toUpperCase() + type.slice(1);
+
+            message.textContent = "StudyAI is generating your materials...";
+            result.textContent = "";
+            interactive.innerHTML = "";
+            document.getElementById("download-summary-btn").style.display = "none";
+            document.getElementById("download-flashcards-btn").style.display = "none";
+            document.getElementById("download-quiz-btn").style.display = "none";
+
+            const buttons = document.querySelectorAll(".tool-button");
+            buttons.forEach(button => button.disabled = true);
+
+            try {
+                const response = await fetch(endpoints[type], {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        lecture_text: lectureText
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+    const errorMessage = typeof data?.detail === "string"
+        ? data.detail
+        : JSON.stringify(data?.detail || data);
+
+    throw new Error(errorMessage);
+}
+
+                if (type === "summary") {
+                    generatedSummary = data.summary;
+
+                    result.classList.add("markdown-content");
+
+                    result.innerHTML = DOMPurify.sanitize(
+                        marked.parse(data.summary)
+                    );
+
+                    document.getElementById("download-summary-btn").style.display = "inline-block";
+                }
+
+                if (type === "flashcards") {
+                    if (!Array.isArray(data.flashcards) || data.flashcards.length === 0) {
+                        throw new Error("No flashcards were generated.");
+                    }
+
+                    flashcards = data.flashcards;
+                    flashcardIndex = 0;
+                    cardFlipped = false;
+                    flashcardStatus = Array(flashcards.length).fill(null);
+
+                    renderFlashcard();
+                    document.getElementById("download-flashcards-btn").style.display = "inline-block";
+                }
+
+                if (type === "quiz") {
+                    if (!Array.isArray(data.questions) || data.questions.length === 0) {
+                        throw new Error("No quiz questions were generated.");
+                    }
+
+                    quizQuestions = data.questions.map(question =>
+                    shuffleQuizAnswers(question)
+                    );
+                    quizIndex = 0;
+                    quizScore = 0;
+                    quizAnswered = false;
+                    renderQuiz();
+                    document.getElementById("download-quiz-btn").style.display = "inline-block";
+                }
+
+                message.textContent = "Generated successfully!";
+
+            }  catch (error) {
+                console.error("StudyAI Error:", error);
+                message.textContent = "Something went wrong: " + error.message;
+            } finally {
+                buttons.forEach(button => button.disabled = false);
+            }
+        }
+
+
+
+        function renderFlashcard() {
+            const interactive = document.getElementById("interactive");
+            const card = flashcards[flashcardIndex];
+
+            const mastered = flashcardStatus.filter(status => status === "known").length;
+            const learning = flashcardStatus.filter(status => status === "learning").length;
+            const reviewed = mastered + learning;
+
+            const progress = (reviewed / flashcards.length) * 100;
+
+            interactive.innerHTML = `
+                <p>Flashcard ${flashcardIndex + 1} of ${flashcards.length}</p>
+
+                <div class="flashcard-progress">
+                    <div class="flashcard-progress-fill" style="width: ${progress}%"></div>
+                </div>
+
+                <div class="flashcard">
+                    <p>${cardFlipped ? "Answer" : "Question"}</p>
+
+                    <h2>${escapeHTML(cardFlipped ? card.answer : card.question)}</h2>
+
+                    <button onclick="flipCard()">
+                        ${cardFlipped ? "Show Question" : "Reveal Answer"}
+                    </button>
+                </div>
+
+                ${cardFlipped ? `
+                    <div class="study-controls">
+                        <button class="know-button" onclick="markCard('known')">
+                            ✓ Know It
+                        </button>
+
+                        <button class="learning-button" onclick="markCard('learning')">
+                            ✗ Still Learning
+                        </button>
+                    </div>
+                ` : ""}
+
+                <div class="study-controls">
+                    <button onclick="previousCard()" ${flashcardIndex === 0 ? "disabled" : ""}>
+                        Previous
+                    </button>
+                </div>
+
+                <div class="flashcard-stats">
+                    <span>✓ Mastered: ${mastered}</span>
+                    <span>Still Learning: ${learning}</span>
+                </div>
+            `;
+        }
+
+
+        function flipCard() {
+            cardFlipped = !cardFlipped;
+            renderFlashcard();
+        }
+
+
+        function previousCard() {
+            if (flashcardIndex > 0) {
+                flashcardIndex--;
+                cardFlipped = false;
+                renderFlashcard();
+            }
+        }
+
+
+        function markCard(status) {
+            flashcardStatus[flashcardIndex] = status;
+
+            if (flashcardIndex < flashcards.length - 1) {
+                flashcardIndex++;
+                cardFlipped = false;
+                renderFlashcard();
+            } else {
+                showFlashcardResults();
+            }
+        }
+
+
+        function showFlashcardResults() {
+            const interactive = document.getElementById("interactive");
+
+            const mastered = flashcardStatus.filter(status => status === "known").length;
+            const learning = flashcardStatus.filter(status => status === "learning").length;
+
+            const percentage = Math.round((mastered / flashcards.length) * 100);
+
+            interactive.innerHTML = `
+                <div class="flashcard">
+                    <h2>Flashcards Complete!</h2>
+
+                    <h1>${mastered} / ${flashcards.length}</h1>
+
+                    <p>${percentage}% mastered</p>
+
+                    <div class="flashcard-stats">
+                        <span>✓ Know It: ${mastered}</span>
+                        <span>Still Learning: ${learning}</span>
+                    </div>
+
+                    <div class="study-controls">
+                        <button onclick="reviewFlashcards()">Review Again</button>
+                    </div>
+                </div>
+            `;
+        }
+
+
+        function reviewFlashcards() {
+            flashcardIndex = 0;
+            cardFlipped = false;
+            flashcardStatus = Array(flashcards.length).fill(null);
+
+            renderFlashcard();
+        }
+
+
+
+        function renderQuiz() {
+            const interactive = document.getElementById("interactive");
+            const question = quizQuestions[quizIndex];
+
+            interactive.innerHTML = `
+                <p>Question ${quizIndex + 1} of ${quizQuestions.length}</p>
+
+                <h2 style="margin: 20px 0;">
+                    ${escapeHTML(question.question)}
+                </h2>
+
+                <div id="quiz-options">
+                    ${Object.entries(question.choices).map(([letter, answer]) => `
+                        <button class="answer-option" data-answer="${letter}">
+                            ${letter}. ${escapeHTML(answer)}
+                        </button>
+                    `).join("")}
+                </div>
+
+                <p id="feedback"></p>
+
+                <div class="study-controls">
+                    <button id="next-question" disabled>
+                        ${quizIndex === quizQuestions.length - 1 ? "See Results" : "Next Question"}
+                    </button>
+                </div>
+            `;
+
+            document.querySelectorAll(".answer-option").forEach(button => {
+                button.addEventListener("click", () => {
+                    selectAnswer(button.dataset.answer);
+                });
+            });
+
+            document.getElementById("next-question").addEventListener("click", nextQuestion);
+        }
+
+
+        function selectAnswer(answer) {
+            if (quizAnswered) return;
+
+            quizAnswered = true;
+
+            const question = quizQuestions[quizIndex];
+            const feedback = document.getElementById("feedback");
+            const buttons = document.querySelectorAll(".answer-option");
+
+            if (answer === question.correct_answer) {
+                quizScore++;
+                feedback.textContent = "Correct! " + question.explanation;
+            } else {
+                feedback.textContent =
+                    "Incorrect. The correct answer is " +
+                    question.correct_answer + ". " + question.explanation;
+            }
+
+            buttons.forEach(button => {
+                button.disabled = true;
+
+                if (button.dataset.answer === question.correct_answer) {
+                    button.classList.add("correct");
+                } else if (button.dataset.answer === answer) {
+                    button.classList.add("incorrect");
+                }
+            });
+
+            document.getElementById("next-question").disabled = false;
+        }
+
+
+        function nextQuestion() {
+            if (quizIndex < quizQuestions.length - 1) {
+                quizIndex++;
+                quizAnswered = false;
+                renderQuiz();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        
+        function showQuizResults() {
+            const interactive = document.getElementById("interactive");
+
+            const total = quizQuestions.length;
+            const incorrect = total - quizScore;
+
+            const percentage = Math.round((quizScore / total) * 100);
+
+            let message = "";
+
+            if (percentage >= 80) {
+                message = "Great job! You understand this material well.";
+            } else if (percentage >= 60) {
+                message = "Good effort! Keep practicing to improve.";
+            } else {
+                message = "Keep studying! Review the material and try again.";
+            }
+
+            interactive.innerHTML = `
+                <div class="flashcard">
+                    <h2>Quiz Complete!</h2>
+
+                    <h1>${quizScore} / ${total}</h1>
+
+                    <h2>${percentage}%</h2>
+
+                    <p>${escapeHTML(message)}</p>
+
+                    <div class="flashcard-stats">
+                        <span>✓ Correct: ${quizScore}</span>
+                        <span>✗ Incorrect: ${incorrect}</span>
+                    </div>
+
+                    <div class="study-controls">
+                        <button onclick="restartQuiz()">Try Again</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        
+        function restartQuiz() {
+            quizQuestions = quizQuestions.map(question =>
+                shuffleQuizAnswers(question)
+            );
+
+            quizIndex = 0;
+            quizScore = 0;
+            quizAnswered = false;
+
+            renderQuiz();
+        }
+        
+        async function downloadSummary() {
+            if (!generatedSummary) {
+                alert("Generate a summary first.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/download-summary", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        summary: generatedSummary
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Could not generate PDF.");
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "StudyAI_Summary.pdf";
+                link.click();
+
+                URL.revokeObjectURL(url);
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+        
+        async function downloadFlashcards() {
+            if (!flashcards.length) {
+                alert("Generate flashcards first.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/download-flashcards", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        flashcards: flashcards
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Could not generate Excel file.");
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "StudyAI_Flashcards.xlsx";
+                link.click();
+
+                URL.revokeObjectURL(url);
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function downloadQuiz() {
+            if (!quizQuestions.length) {
+                alert("Generate a quiz first.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/download-quiz", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        questions: quizQuestions
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Could not generate Excel file.");
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "StudyAI_Quiz.xlsx";
+                link.click();
+
+                URL.revokeObjectURL(url);
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+
+
+        
+    </script>
+
+</body>
+</html>
