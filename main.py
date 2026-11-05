@@ -35,10 +35,10 @@ app = FastAPI(title="StudyAI")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class StudyRequest(BaseModel):
-    lecture_text: str = Field(min_length=1, max_length=50000)
+    lecture_text: str = Field(min_length=1, max_length=100000)
 
 class SummaryPDFRequest(BaseModel):
-    summary: str = Field(min_length=1, max_length=50000)
+    summary: str = Field(min_length=1, max_length=100000)
 
 @app.get("/")
 def home():
@@ -124,7 +124,8 @@ def generate_summary(request: StudyRequest):
         # Lecture Summary
     
         ## 1. Main Topics
-        Explain the major topics covered in-detail.
+        Explain the major topics covered in detail. Only this major topic section doesn't require bullet points.
+        Make each major topic explanation 3-5 sentences.
     
         ## 2. Important Definitions
         List important terms and their meanings.
