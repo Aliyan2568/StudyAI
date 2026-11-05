@@ -313,7 +313,7 @@ def generate_flashcards(request: StudyRequest):
 @app.post("/generate-quiz")
 def generate_quiz(request: StudyRequest):
     prompt = f"""
-    Create 20 multiple-choice questions using only these lecture notes.
+    Create 15 multiple-choice questions using only these lecture notes.
 
     Each question must have four choices and exactly one correct answer.
 
@@ -343,7 +343,9 @@ def generate_quiz(request: StudyRequest):
     try:
         result = ask_ai_json(prompt)
         return result
-    except Exception:
+    except Exception as e:
+        print("QUIZ GENERATION ERROR:", repr(e))
+
         raise HTTPException(
             status_code=502,
             detail="Could not generate quiz. Please try again."
