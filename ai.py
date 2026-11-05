@@ -1,4 +1,3 @@
-
 import os
 import json
 from dotenv import load_dotenv
@@ -30,8 +29,6 @@ def ask_ai(prompt):
     )
 
     return response.choices[0].message.content
-
-
 
 
 def ask_ai_json(prompt):
@@ -97,5 +94,3 @@ def ask_ai_json(prompt):
         repaired = re.sub(r",\s*([}\]])", r"\1", repaired)
 
         return json.loads(repaired)
-
-

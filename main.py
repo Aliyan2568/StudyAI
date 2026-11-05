@@ -506,4 +506,3 @@ def download_quiz_excel(request: QuizExcelRequest):
             "Content-Disposition": 'attachment; filename="StudyAI_Quiz.xlsx"'
         }
     )
-
