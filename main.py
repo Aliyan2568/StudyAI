@@ -124,7 +124,7 @@ def generate_summary(request: StudyRequest):
         # Lecture Summary
     
         ## 1. Main Topics
-        Explain the major topics covered.
+        Explain the major topics covered in-detail.
     
         ## 2. Important Definitions
         List important terms and their meanings.
